@@ -5,7 +5,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "prettier": "prettier --write ."
   },
   "jest": {
     "testEnvironment": "node",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "prettier": "^3.8.1",
     "supertest": "^7.0.0"
   }
 }
