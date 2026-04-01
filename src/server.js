@@ -3,7 +3,7 @@ import he from 'he';
 import safeCompare from 'safe-compare';
 import { makeJWT } from 'addons-scanner-utils/functions/auth';
 
-import pkg from './package.json' with { type: 'json' };
+import pkg from '../package.json' with { type: 'json' };
 import { fetchQueryResults } from './redash.js';
 
 const app = express();
