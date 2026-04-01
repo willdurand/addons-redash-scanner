@@ -21,14 +21,14 @@ for more context.
 
 ### Redash
 
-Create a new alert destination of type "webhook":
+1. Create a new alert destination of type "webhook":
 
-- name: addons-redash-scanner
-- url: the URL to the scanner (e.g. `http://127.0.0.1:20000/redash-webhook`)
-- username: some user name, same as `REDASH_USER`
-- password: some user pass, same as `REDASH_PASS`
+    - name: addons-redash-scanner
+    - url: the URL to the scanner (e.g. `http://127.0.0.1:20000/redash-webhook`)
+    - username: some user name, same as `REDASH_USER`
+    - password: some user pass, same as `REDASH_PASS`
 
-Add `addons-redash-scanner` to the list of destinations.
+2. In a Redash alert, add `addons-redash-scanner` to the list of destinations.
 
 Currently, the scanner expects a query that returns rows, with at least a
 `version_id` column. Each row (up to `MAX_RESULTS_TO_PROCESS`) will lead to the
