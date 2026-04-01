@@ -14,8 +14,8 @@ app.post('/redash-webhook', async (req, res) => {
     ? Buffer.from(auth.slice(6), 'base64').toString().split(':')
     : [];
   if (
-    !safeCompare(user ?? '', process.env.REDASH_USER ?? '') ||
-    !safeCompare(pass ?? '', process.env.REDASH_PASS ?? '')
+    !safeCompare(user ?? '', process.env.WEBHOOK_USER ?? '') ||
+    !safeCompare(pass ?? '', process.env.WEBHOOK_PASS ?? '')
   ) {
     return res.status(401).json({ error: 'unauthorized' });
   }

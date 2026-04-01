@@ -13,11 +13,12 @@ jest.unstable_mockModule('./redash.js', () => ({
 const { app } = await import('./server.js');
 
 describe('server.test.js', () => {
-  const REDASH_USER = 'redash';
-  const REDASH_PASS = 'redash';
+  const WEBHOOK_USER = 'redash';
+  const WEBHOOK_PASS = 'redash';
 
   const validAuth =
-    'Basic ' + Buffer.from(`${REDASH_USER}:${REDASH_PASS}`).toString('base64');
+    'Basic ' +
+    Buffer.from(`${WEBHOOK_USER}:${WEBHOOK_PASS}`).toString('base64');
 
   const validBody = {
     alert: {
@@ -28,8 +29,8 @@ describe('server.test.js', () => {
   };
 
   beforeAll(() => {
-    process.env.REDASH_USER = REDASH_USER;
-    process.env.REDASH_PASS = REDASH_PASS;
+    process.env.WEBHOOK_USER = WEBHOOK_USER;
+    process.env.WEBHOOK_PASS = WEBHOOK_PASS;
     process.env.AMO_SCANNER_RESULTS_API_URL =
       'https://example.com/api/v5/scanner/results/';
   });
