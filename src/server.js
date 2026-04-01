@@ -1,5 +1,4 @@
 import express from 'express';
-import he from 'he';
 import safeCompare from 'safe-compare';
 import { makeJWT } from 'addons-scanner-utils/functions/auth';
 
@@ -18,15 +17,31 @@ app.post('/redash-webhook', async (req, res) => {
     !safeCompare(user ?? '', process.env.REDASH_USER ?? '') ||
     !safeCompare(pass ?? '', process.env.REDASH_PASS ?? '')
   ) {
-    return res.status(401).send('Unauthorized');
+    return res.status(401).json({ error: 'unauthorized' });
   }
 
   const alert = req.body?.alert;
   if (typeof alert !== 'object') {
-    return res.status(400).end();
+    return res.status(400).json({ error: 'invalid payload (missing alert)' });
   }
 
-  const results = await fetchQueryResults(alert.query_id, req.body.url_base);
+  let description;
+  try {
+    description = JSON.parse(alert.description);
+  } catch (err) {
+    console.error('failed to parse alert.description', err);
+    return res.status(400).json({ error: 'failed to parse alert description' });
+  }
+
+  const { query_id } = description;
+  if (!query_id) {
+    console.error('missing query_id in alert description');
+    return res
+      .status(400)
+      .json({ error: 'missing query_id in alert description' });
+  }
+
+  const results = await fetchQueryResults(query_id, req.body.url_base);
 
   results.forEach(({ version_id }) => {
     if (!version_id) {
@@ -49,7 +64,7 @@ app.post('/redash-webhook', async (req, res) => {
             ANNOTATIONS: [
               {
                 message: `Redash alert: ${alert.name}`,
-                url: `${req.body.url_base}/queries/${alert.query_id}`,
+                url: `${req.body.url_base}/queries/${query_id}`,
               },
             ],
           },

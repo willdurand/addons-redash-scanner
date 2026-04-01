@@ -22,7 +22,7 @@ describe('server.test.js', () => {
   const validBody = {
     alert: {
       name: 'Test Alert',
-      query_id: 2,
+      description: '{"query_id": 2}',
     },
     url_base: 'https://redash.example.com',
   };
@@ -57,11 +57,41 @@ describe('server.test.js', () => {
     });
 
     it('returns 400 when alert is missing', async () => {
-      await request(app)
+      const res = await request(app)
         .post('/redash-webhook')
         .set('Authorization', validAuth)
         .send({})
         .expect(400);
+
+      expect(res.body).toEqual({ error: 'invalid payload (missing alert)' });
+    });
+
+    it('returns 400 when description is not valid JSON', async () => {
+      const res = await request(app)
+        .post('/redash-webhook')
+        .set('Authorization', validAuth)
+        .send({
+          ...validBody,
+          alert: { ...validBody.alert, description: 'not json' },
+        })
+        .expect(400);
+
+      expect(res.body).toEqual({ error: 'failed to parse alert description' });
+    });
+
+    it('returns 400 when description is missing query_id', async () => {
+      const res = await request(app)
+        .post('/redash-webhook')
+        .set('Authorization', validAuth)
+        .send({
+          ...validBody,
+          alert: { ...validBody.alert, description: '{}' },
+        })
+        .expect(400);
+
+      expect(res.body).toEqual({
+        error: 'missing query_id in alert description',
+      });
     });
 
     it('returns 202 with { ok: true } on success', async () => {
@@ -80,10 +110,7 @@ describe('server.test.js', () => {
         .set('Authorization', validAuth)
         .send(validBody);
 
-      expect(mockFetchQueryResults).toHaveBeenCalledWith(
-        validBody.alert.query_id,
-        validBody.url_base,
-      );
+      expect(mockFetchQueryResults).toHaveBeenCalledWith(2, validBody.url_base);
 
       expect(global.fetch).toHaveBeenCalledTimes(2);
 
