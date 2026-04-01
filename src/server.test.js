@@ -22,6 +22,7 @@ describe('server.test.js', () => {
 
   const validBody = {
     alert: {
+      id: 1,
       name: 'Test Alert',
       description: '{"query_id": 2}',
     },
@@ -128,7 +129,8 @@ describe('server.test.js', () => {
             ANNOTATIONS: [
               {
                 message: 'Redash alert: Test Alert',
-                url: 'https://redash.example.com/queries/2',
+                query_url: 'https://redash.example.com/queries/2',
+                alert_url: 'https://redash.example.com/alerts/1',
               },
             ],
           },
@@ -147,7 +149,8 @@ describe('server.test.js', () => {
             ANNOTATIONS: [
               {
                 message: 'Redash alert: Test Alert',
-                url: 'https://redash.example.com/queries/2',
+                query_url: 'https://redash.example.com/queries/2',
+                alert_url: 'https://redash.example.com/alerts/1',
               },
             ],
           },
