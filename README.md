@@ -42,7 +42,7 @@ and `AMO_JWT_SECRET`).
 $ npm install
 $ AMO_SCANNER_RESULTS_API_URL=http://olympia.test/api/v5/scanner/results/ \
   AMO_JWT_ISS_KEY="xxx" AMO_JWT_SECRET="xxx" \
-  REDASH_USER=redash REDASH_PASS=redash \
+  REDASH_USER=redash REDASH_PASS=redash REDASH_USER_API_KEY="xxx" \
   npm start
 ```
 
