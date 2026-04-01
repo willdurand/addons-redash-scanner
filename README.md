@@ -44,7 +44,7 @@ $ npm install
 $ AMO_SCANNER_RESULTS_API_URL=http://olympia.test/api/v5/scanner/results/ \
   AMO_JWT_ISS_KEY="xxx" AMO_JWT_SECRET="xxx" \
   REDASH_USER=redash REDASH_PASS=redash \
-  node index.js
+  npm start
 ```
 
 [scanner-pipeline]: https://mozilla.github.io/addons-server/topics/development/scanner_pipeline.html
