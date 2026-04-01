@@ -29,6 +29,13 @@ for more context.
 
 2. In a Redash alert, add `addons-redash-scanner` to the list of destinations.
 
+3. Set the alert's description to a JSON object containing the `query_id` to
+   fetch results from, e.g.:
+
+   ```json
+   { "query_id": 123 }
+   ```
+
 Currently, the scanner expects a query that returns rows, with at least a
 `version_id` column. Each row (up to `MAX_RESULTS_TO_PROCESS`) will lead to the
 creation of a scanner result to indicate that the received alert has fired.
