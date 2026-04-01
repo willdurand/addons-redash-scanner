@@ -13,6 +13,6 @@ export const fetchQueryResults = async (id, baseUrl) => {
 
   return (results?.query_result?.data?.rows ?? []).slice(
     0,
-    process.env.MAX_RESULTS_TO_PROCESS,
+    process.env.MAX_RESULTS_TO_PROCESS ?? 10,
   );
 };
