@@ -13,7 +13,7 @@
     "transform": {}
   },
   "dependencies": {
-    "addons-scanner-utils": "^13.1.0",
+    "addons-scanner-utils": "^15.0.0",
     "express": "^5.2.1",
     "he": "^1.2.0",
     "safe-compare": "^1.1.4"
