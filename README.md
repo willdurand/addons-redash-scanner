@@ -6,14 +6,16 @@ for more context.
 
 ## Configuration
 
-| Variable                      | Description                               |
-| ----------------------------- | ----------------------------------------- |
-| `REDASH_USER`                 | Basic Auth username expected from Redash  |
-| `REDASH_PASS`                 | Basic Auth password expected from Redash  |
-| `AMO_SCANNER_RESULTS_API_URL` | URL to post scanner results to            |
-| `AMO_JWT_ISS_KEY`             | JWT issuer key for AMO API authentication |
-| `AMO_JWT_SECRET`              | JWT secret for AMO API authentication     |
-| `PORT`                        | Port to listen on (default: `20000`)      |
+| Variable                      | Description                                    |
+| ----------------------------- | ---------------------------------------------- |
+| `REDASH_USER`                 | Basic Auth username expected from Redash       |
+| `REDASH_PASS`                 | Basic Auth password expected from Redash       |
+| `REDASH_USER_API_KEY`         | Redash user API key to fetch query results     |
+| `MAX_RESULTS_TO_PROCESS`      | Maximum number of query result rows to process |
+| `AMO_SCANNER_RESULTS_API_URL` | URL to post scanner results to                 |
+| `AMO_JWT_ISS_KEY`             | JWT issuer key for AMO API authentication      |
+| `AMO_JWT_SECRET`              | JWT secret for AMO API authentication          |
+| `PORT`                        | Port to listen on (default: `20000`)           |
 
 ## Usage
 
@@ -26,12 +28,11 @@ Create a new alert destination of type "webhook":
 - username: some user name, same as `REDASH_USER`
 - password: some user pass, same as `REDASH_PASS`
 
-Then, for each alert, configure a custom template with `{{ QUERY_RESULT_ROWS }}`
-in the body. Add `addons-redash-scanner` to the list of destinations.
+Add `addons-redash-scanner` to the list of destinations.
 
 Currently, the scanner expects a query that returns rows, with at least a
-`version_id` column. Each row will lead to the creation of a scanner result to
-indicate that the received alert has fired.
+`version_id` column. Each row (up to `MAX_RESULTS_TO_PROCESS`) will lead to the
+creation of a scanner result to indicate that the received alert has fired.
 
 ### Scanner
 
