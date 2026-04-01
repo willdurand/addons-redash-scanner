@@ -64,7 +64,8 @@ app.post('/redash-webhook', async (req, res) => {
             ANNOTATIONS: [
               {
                 message: `Redash alert: ${alert.name}`,
-                url: `${req.body.url_base}/queries/${query_id}`,
+                query_url: `${req.body.url_base}/queries/${query_id}`,
+                alert_url: `${req.body.url_base}/alerts/${alert.id}`,
               },
             ],
           },
