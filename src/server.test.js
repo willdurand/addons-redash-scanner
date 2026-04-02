@@ -176,5 +176,42 @@ describe('server.test.js', () => {
         },
       });
     });
+
+    it('skips results with missing version_id', async () => {
+      mockFetchQueryResults.mockResolvedValue([{ version_id: 123 }, {}]);
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      await request(app)
+        .post('/redash-webhook')
+        .set('Authorization', validAuth)
+        .send(validBody);
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'skipped result because version_id was missing',
+      );
+
+      console.error.mockRestore();
+    });
+
+    it('logs an error when posting scanner results fails', async () => {
+      global.fetch = jest.fn().mockRejectedValue(new Error('network error'));
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      await request(app)
+        .post('/redash-webhook')
+        .set('Authorization', validAuth)
+        .send(validBody)
+        .expect(200);
+
+      await new Promise((resolve) => setImmediate(resolve));
+
+      expect(console.error).toHaveBeenCalledWith(
+        'failed to post scanner results:',
+        expect.any(Error),
+      );
+
+      console.error.mockRestore();
+    });
   });
 });
