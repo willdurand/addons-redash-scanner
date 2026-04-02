@@ -24,6 +24,7 @@ describe('server.test.js', () => {
     alert: {
       id: 1,
       name: 'Test Alert',
+      state: 'triggered',
       description: '{"query_id": 2}',
     },
     url_base: 'https://redash.example.com',
@@ -68,6 +69,22 @@ describe('server.test.js', () => {
       expect(res.body).toEqual({ error: 'invalid payload (missing alert)' });
     });
 
+    it('returns 202 without processing when alert state is not triggered', async () => {
+      const res = await request(app)
+        .post('/redash-webhook')
+        .set('Authorization', validAuth)
+        .send({
+          ...validBody,
+          alert: { ...validBody.alert, state: 'ok' },
+        })
+        .expect(200);
+
+      expect(res.body).toEqual({
+        message: 'skipped event (alert state is not triggered)',
+      });
+      expect(mockFetchQueryResults).not.toHaveBeenCalled();
+    });
+
     it('returns 400 when description is not valid JSON', async () => {
       const res = await request(app)
         .post('/redash-webhook')
@@ -96,14 +113,16 @@ describe('server.test.js', () => {
       });
     });
 
-    it('returns 202 with { ok: true } on success', async () => {
+    it('returns 200 with a message on success', async () => {
       const res = await request(app)
         .post('/redash-webhook')
         .set('Authorization', validAuth)
         .send(validBody)
-        .expect(202);
+        .expect(200);
 
-      expect(res.body).toEqual({ ok: true });
+      expect(res.body).toEqual({
+        message: 'scanner result annotations created',
+      });
     });
 
     it('calls fetch for each addon in the alert', async () => {
