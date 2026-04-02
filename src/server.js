@@ -25,6 +25,12 @@ app.post('/redash-webhook', async (req, res) => {
     return res.status(400).json({ error: 'invalid payload (missing alert)' });
   }
 
+  if (alert.state !== 'triggered') {
+    return res
+      .status(200)
+      .json({ message: 'skipped event (alert state is not triggered)' });
+  }
+
   let description;
   try {
     description = JSON.parse(alert.description);
@@ -74,7 +80,9 @@ app.post('/redash-webhook', async (req, res) => {
     }).catch((err) => console.error('failed to post scanner results:', err));
   });
 
-  return res.status(202).json({ ok: true });
+  return res
+    .status(200)
+    .json({ message: 'scanner result annotations created' });
 });
 
 export { app };
